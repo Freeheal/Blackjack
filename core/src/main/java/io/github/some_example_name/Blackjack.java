@@ -12,10 +12,10 @@ public class Blackjack {
 	Stack<Karte> stapel = new Stack<>();
 	ArrayList<Karte> playerHand = new ArrayList<>();
 	ArrayList<Karte> dealerHand = new ArrayList<>();
-	
+
 	public Blackjack() {
-		
-		//Herz
+
+		// Herz
 		stapel.push(new Karte(2, typ.Herz, bild.Zahl));
 		stapel.push(new Karte(3, typ.Herz, bild.Zahl));
 		stapel.push(new Karte(4, typ.Herz, bild.Zahl));
@@ -29,8 +29,8 @@ public class Blackjack {
 		stapel.push(new Karte(10, typ.Herz, bild.Dame));
 		stapel.push(new Karte(10, typ.Herz, bild.Koenig));
 		stapel.push(new Karte(11, typ.Herz, bild.Ass));
-		
-		//Karo
+
+		// Karo
 		stapel.push(new Karte(2, typ.Karo, bild.Zahl));
 		stapel.push(new Karte(3, typ.Karo, bild.Zahl));
 		stapel.push(new Karte(4, typ.Karo, bild.Zahl));
@@ -44,8 +44,8 @@ public class Blackjack {
 		stapel.push(new Karte(10, typ.Karo, bild.Dame));
 		stapel.push(new Karte(10, typ.Karo, bild.Koenig));
 		stapel.push(new Karte(11, typ.Karo, bild.Ass));
-		
-		//Kreuz
+
+		// Kreuz
 		stapel.push(new Karte(2, typ.Karo, bild.Zahl));
 		stapel.push(new Karte(3, typ.Karo, bild.Zahl));
 		stapel.push(new Karte(4, typ.Karo, bild.Zahl));
@@ -59,8 +59,8 @@ public class Blackjack {
 		stapel.push(new Karte(10, typ.Karo, bild.Dame));
 		stapel.push(new Karte(10, typ.Karo, bild.Koenig));
 		stapel.push(new Karte(11, typ.Karo, bild.Ass));
-		
-		//Pik
+
+		// Pik
 		stapel.push(new Karte(2, typ.Kreuz, bild.Zahl));
 		stapel.push(new Karte(3, typ.Kreuz, bild.Zahl));
 		stapel.push(new Karte(4, typ.Kreuz, bild.Zahl));
@@ -74,57 +74,79 @@ public class Blackjack {
 		stapel.push(new Karte(10, typ.Kreuz, bild.Dame));
 		stapel.push(new Karte(10, typ.Kreuz, bild.Koenig));
 		stapel.push(new Karte(11, typ.Kreuz, bild.Ass));
-		
-		
-		Collections.shuffle(stapel);	
+
+		Collections.shuffle(stapel);
 		ziehenPlayer(playerHand);
 		ziehenDealer(dealerHand);
 	}
-	
 
 	public void ziehenPlayer(ArrayList<Karte> hand) {
 		hand.add(stapel.pop());
 		hand.add(stapel.pop());
 	}
-	
+
 	public void ziehenDealer(ArrayList<Karte> hand) {
 		hand.add(stapel.pop());
-		hand.add(stapel.pop()); //Muss vorerst verdeckt vorliegen
+		hand.add(stapel.pop()); // Muss vorerst verdeckt vorliegen
 	}
-	
-	
-	
+
 	public void hit(ArrayList<Karte> hand) {
 		hand.add(stapel.pop());
 		update();
 	}
 
 	public int verdoppeln(ArrayList<Karte> hand, int einsatz) {
-	hand.add(stapel.pop());
-	return einsatz*2;	
+		hand.add(stapel.pop());
+		return einsatz * 2;
 	}
-	
+
 	public void setEinsatz(int wert) {
 		einsatz = wert;
 	}
-	
+
 	public void stand() {
 		dealer();
 	}
-	
-	
+
 	public void dealer() {
-		if(dealerWert >= 17)return;
+		if (dealerWert >= 17)
+			return;
 		hit(dealerHand);
 		update();
 		dealer();
 	}
-	
-	public void update() {
-		if(playerWert > 21)return;
-		if(dealerWert >21)return;
+
+	public int getWert(ArrayList<Karte> hand) {
+		int res = 0;
+		int count = 0;
+		for (var i : hand) {
+			if (i.getFoto() == bild.Ass)
+				count++;
+			res += i.getWert();
+		}
+		while (count > 0 && res > 21) {
+			count--;
+			res -= 10;
+		}
+		return res;
 	}
-	
-	
+
+	public void update() {
+		playerWert = getWert(playerHand);
+		dealerWert = getWert(dealerHand);
+		if (playerWert == 21)
+			return; // methode !
+		if (dealerWert == 21)
+			return;
+
+		if (playerWert > 21)
+			return;
+		if (dealerWert > 21)
+			return;
+	}
+	public void resumeee(ArrayList<Karte> hand) {
+		
+		
+	}
 
 }
