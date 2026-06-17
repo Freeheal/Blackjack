@@ -10,12 +10,11 @@ public class Player {
 		geld = 1000;
 	}
 
-	public void setGeld(int einsatz) {
-		geld += einsatz;
-	}
-
-	public int getGeld() {
-	return geld;
-	}
+	public void addGeld(int einsatz) { geld += einsatz; }
+	public int getGeld() { return geld; }
+    public int getStreak (){return this.streak;}
+    public void setStreak (int i){this.streak = i;}
+    public String getName (){return this.name;}
+    public void setName (String i){this.name = i;}
 
 }

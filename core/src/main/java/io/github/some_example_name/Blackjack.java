@@ -4,12 +4,22 @@ import java.util.*;
 
 public class Blackjack {
 	enum WinStates {
-		Won, Lost, Equal, Playing
-	}
+		Won, Lost, Equal, Playing;
+    @Override
+    public String toString() {
+        switch (this) {
+            case Won: return "Won";
+            case Lost: return "Lost";
+            case Equal:  return "Equal";
+            case Playing:  return "Playing";
+            default:    return name();
+        }
+    }
+}
 
 	private int einsatz;
-	private int playerWert;
-	private int dealerWert;
+	//private int playerWert;
+	//private int dealerWert;
 	private boolean playerturn = true;
 	private WinStates winstate = WinStates.Playing;
 	Stack<Karte> stapel = new Stack<>();
@@ -20,6 +30,13 @@ public class Blackjack {
 	public Blackjack() {
 
 		// Herz
+        stapelInit();
+
+		ziehenPlayer(playerHand);
+		ziehenDealer(dealerHand);
+	}
+
+    private void stapelInit(){
 		for (int i = 2; i < 10; i++) {
 			stapel.push(new Karte(i, Karte.typ.Herz, Karte.bild.Zahl));
 		}
@@ -60,10 +77,8 @@ public class Blackjack {
 		stapel.push(new Karte(11, Karte.typ.Kreuz, Karte.bild.Ass));
 
 		Collections.shuffle(stapel);
-		ziehenPlayer(playerHand);
-		ziehenDealer(dealerHand);
-	}
 
+    }
 	public void ziehenPlayer(ArrayList<Karte> hand) {
 		hand.add(stapel.pop());
 		hand.add(stapel.pop());
@@ -83,17 +98,19 @@ public class Blackjack {
 	public void verdoppeln(ArrayList<Karte> hand) {
 		playerturn = false;
 		hand.add(stapel.pop());
-		player.setGeld(-einsatz); // Spieler setzt nochmal den gleichen Einsatz
+		player.addGeld(-einsatz); // Spieler setzt nochmal den gleichen Einsatz
 		this.einsatz *= 2; // theoretischen Gewinn verdoppeln
 		endRound();
 
 	}
+    public Player getPlayer (){return this.player;}
+    public void setPlayer (Player i ){this.player = i;}
 
 	public boolean setEinsatz(int wert) {
 		if (wert > player.getGeld())
 			return false;
 		einsatz = wert;
-		player.setGeld(-wert); // Wert wird vom aktuellen Geld des Spielers abgezogen
+		player.addGeld(-wert); // Wert wird vom aktuellen Geld des Spielers abgezogen
 		return true;
 	}
 
@@ -105,7 +122,6 @@ public class Blackjack {
 		playerturn = false;
 		dealerHand.getFirst().setSichtbar(true);
 		endRound();
-
 	}
 
 	public void dealer() {
@@ -156,6 +172,9 @@ public class Blackjack {
 			;
 		}
 	}
+    public WinStates getWinState()  {
+        return winstate;
+    }
 
 	public WinStates checkWin() {
 		var d = getHiddenWert(dealerHand);
@@ -174,26 +193,42 @@ public class Blackjack {
 			return WinStates.Equal;
 	}
 
-	public void endRound() {
+	public WinStates endRound() {
 		dealer();
 		winstate = checkWin();
 		if (winstate == WinStates.Equal) {
-			player.setGeld(einsatz); // Spieler bekommt Einsatz zurück
+			player.addGeld(einsatz); // Spieler bekommt Einsatz zurück
+            player.setStreak(0); // TODO evtl anders
+            return WinStates.Equal;
 		}
-		if (winstate == WinStates.Won) {
-			player.setGeld(einsatz * 2); // Spieler erhält das Doppelte
+        else if (winstate == WinStates.Won) {
+			player.addGeld(einsatz); // Spieler erhält das Doppelte
+            player.setStreak(player.getStreak() + 1);
+            return WinStates.Won;
 		}
-
+        else {
+			player.addGeld(-1 *  einsatz); // Spieler verliert Einsatz
+            player.setStreak(0);
+            return WinStates.Lost;
+        }
 	}
 
 	public void newRound() {
-		einsatz = 0;
-		for (Karte i : playerHand) { // Reset des ursprünglichen Kartendecks
-			stapel.push(i);
-		}
-		for (Karte i : dealerHand) {
-			stapel.push(i);
-		}
+		//einsatz = 100;
+        setEinsatz(100);
+        //player.addGeld(-einsatz);
+		//for (Karte i : playerHand) { // Reset des ursprünglichen Kartendecks
+		//	stapel.push(i);
+		//}
+		//for (Karte i : dealerHand) {
+		//	stapel.push(i);
+		//}
+        playerHand = new ArrayList<>();
+        dealerHand = new ArrayList<>();
+        stapelInit();
+        ziehenPlayer(playerHand);
+        ziehenDealer(dealerHand);
+
 		Collections.shuffle(stapel); // neues Deck ist bereit
 		winstate = WinStates.Playing;
 		playerturn = true;
