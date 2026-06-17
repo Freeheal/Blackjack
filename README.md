@@ -1,6 +1,6 @@
 # BenAugustin
 
-<video src="./preview.mp4" width="100%" controls autoplay loop muted></video>
+https://github.com/Freeheal/Blackjack/blob/main/preview.mp4
 
 
 ## Controls
