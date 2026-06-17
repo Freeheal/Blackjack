@@ -2,78 +2,62 @@ package io.github.some_example_name;
 
 import java.util.*;
 
-import io.github.some_example_name.Karte.bild;
-import io.github.some_example_name.Karte.typ;
-
 public class Blackjack {
+	enum WinStates {
+		Won, Lost, Equal, Playing
+	}
+
 	private int einsatz;
 	private int playerWert;
 	private int dealerWert;
+	private boolean playerturn = true;
+	private WinStates winstate = WinStates.Playing;
 	Stack<Karte> stapel = new Stack<>();
 	ArrayList<Karte> playerHand = new ArrayList<>();
 	ArrayList<Karte> dealerHand = new ArrayList<>();
+	Player player = new Player("Phillip");
 
 	public Blackjack() {
 
 		// Herz
-		stapel.push(new Karte(2, typ.Herz, bild.Zahl));
-		stapel.push(new Karte(3, typ.Herz, bild.Zahl));
-		stapel.push(new Karte(4, typ.Herz, bild.Zahl));
-		stapel.push(new Karte(5, typ.Herz, bild.Zahl));
-		stapel.push(new Karte(6, typ.Herz, bild.Zahl));
-		stapel.push(new Karte(7, typ.Herz, bild.Zahl));
-		stapel.push(new Karte(8, typ.Herz, bild.Zahl));
-		stapel.push(new Karte(9, typ.Herz, bild.Zahl));
-		stapel.push(new Karte(10, typ.Herz, bild.Zahl));
-		stapel.push(new Karte(10, typ.Herz, bild.Bube));
-		stapel.push(new Karte(10, typ.Herz, bild.Dame));
-		stapel.push(new Karte(10, typ.Herz, bild.Koenig));
-		stapel.push(new Karte(11, typ.Herz, bild.Ass));
+		for (int i = 2; i < 10; i++) {
+			stapel.push(new Karte(i, Karte.typ.Herz, Karte.bild.Zahl));
+		}
+		stapel.push(new Karte(10, Karte.typ.Herz, Karte.bild.Zahl));
+		stapel.push(new Karte(10, Karte.typ.Herz, Karte.bild.Bube));
+		stapel.push(new Karte(10, Karte.typ.Herz, Karte.bild.Dame));
+		stapel.push(new Karte(10, Karte.typ.Herz, Karte.bild.Koenig));
+		stapel.push(new Karte(11, Karte.typ.Herz, Karte.bild.Ass));
 
 		// Karo
-		stapel.push(new Karte(2, typ.Karo, bild.Zahl));
-		stapel.push(new Karte(3, typ.Karo, bild.Zahl));
-		stapel.push(new Karte(4, typ.Karo, bild.Zahl));
-		stapel.push(new Karte(5, typ.Karo, bild.Zahl));
-		stapel.push(new Karte(6, typ.Karo, bild.Zahl));
-		stapel.push(new Karte(7, typ.Karo, bild.Zahl));
-		stapel.push(new Karte(8, typ.Karo, bild.Zahl));
-		stapel.push(new Karte(9, typ.Karo, bild.Zahl));
-		stapel.push(new Karte(10, typ.Karo, bild.Zahl));
-		stapel.push(new Karte(10, typ.Karo, bild.Bube));
-		stapel.push(new Karte(10, typ.Karo, bild.Dame));
-		stapel.push(new Karte(10, typ.Karo, bild.Koenig));
-		stapel.push(new Karte(11, typ.Karo, bild.Ass));
+		for (int i = 2; i < 10; i++) {
+			stapel.push(new Karte(i, Karte.typ.Karo, Karte.bild.Zahl));
+		}
+		stapel.push(new Karte(10, Karte.typ.Karo, Karte.bild.Zahl));
+		stapel.push(new Karte(10, Karte.typ.Karo, Karte.bild.Bube));
+		stapel.push(new Karte(10, Karte.typ.Karo, Karte.bild.Dame));
+		stapel.push(new Karte(10, Karte.typ.Karo, Karte.bild.Koenig));
+		stapel.push(new Karte(11, Karte.typ.Karo, Karte.bild.Ass));
 
 		// Kreuz
-		stapel.push(new Karte(2, typ.Karo, bild.Zahl));
-		stapel.push(new Karte(3, typ.Karo, bild.Zahl));
-		stapel.push(new Karte(4, typ.Karo, bild.Zahl));
-		stapel.push(new Karte(5, typ.Karo, bild.Zahl));
-		stapel.push(new Karte(6, typ.Karo, bild.Zahl));
-		stapel.push(new Karte(7, typ.Karo, bild.Zahl));
-		stapel.push(new Karte(8, typ.Karo, bild.Zahl));
-		stapel.push(new Karte(9, typ.Karo, bild.Zahl));
-		stapel.push(new Karte(10, typ.Karo, bild.Zahl));
-		stapel.push(new Karte(10, typ.Karo, bild.Bube));
-		stapel.push(new Karte(10, typ.Karo, bild.Dame));
-		stapel.push(new Karte(10, typ.Karo, bild.Koenig));
-		stapel.push(new Karte(11, typ.Karo, bild.Ass));
+		for (int i = 2; i < 10; i++) {
+			stapel.push(new Karte(i, Karte.typ.Karo, Karte.bild.Zahl));
+		}
+		stapel.push(new Karte(10, Karte.typ.Karo, Karte.bild.Zahl));
+		stapel.push(new Karte(10, Karte.typ.Karo, Karte.bild.Bube));
+		stapel.push(new Karte(10, Karte.typ.Karo, Karte.bild.Dame));
+		stapel.push(new Karte(10, Karte.typ.Karo, Karte.bild.Koenig));
+		stapel.push(new Karte(11, Karte.typ.Karo, Karte.bild.Ass));
 
 		// Pik
-		stapel.push(new Karte(2, typ.Kreuz, bild.Zahl));
-		stapel.push(new Karte(3, typ.Kreuz, bild.Zahl));
-		stapel.push(new Karte(4, typ.Kreuz, bild.Zahl));
-		stapel.push(new Karte(5, typ.Kreuz, bild.Zahl));
-		stapel.push(new Karte(6, typ.Kreuz, bild.Zahl));
-		stapel.push(new Karte(7, typ.Kreuz, bild.Zahl));
-		stapel.push(new Karte(8, typ.Kreuz, bild.Zahl));
-		stapel.push(new Karte(9, typ.Kreuz, bild.Zahl));
-		stapel.push(new Karte(10, typ.Kreuz, bild.Zahl));
-		stapel.push(new Karte(10, typ.Kreuz, bild.Bube));
-		stapel.push(new Karte(10, typ.Kreuz, bild.Dame));
-		stapel.push(new Karte(10, typ.Kreuz, bild.Koenig));
-		stapel.push(new Karte(11, typ.Kreuz, bild.Ass));
+		for (int i = 2; i < 10; i++) {
+			stapel.push(new Karte(i, Karte.typ.Kreuz, Karte.bild.Zahl));
+		}
+		stapel.push(new Karte(10, Karte.typ.Kreuz, Karte.bild.Zahl));
+		stapel.push(new Karte(10, Karte.typ.Kreuz, Karte.bild.Bube));
+		stapel.push(new Karte(10, Karte.typ.Kreuz, Karte.bild.Dame));
+		stapel.push(new Karte(10, Karte.typ.Kreuz, Karte.bild.Koenig));
+		stapel.push(new Karte(11, Karte.typ.Kreuz, Karte.bild.Ass));
 
 		Collections.shuffle(stapel);
 		ziehenPlayer(playerHand);
@@ -88,39 +72,55 @@ public class Blackjack {
 	public void ziehenDealer(ArrayList<Karte> hand) {
 		hand.add(stapel.pop());
 		hand.add(stapel.pop()); // Muss vorerst verdeckt vorliegen
+		hand.getFirst().setSichtbar(false);
 	}
 
 	public void hit(ArrayList<Karte> hand) {
 		hand.add(stapel.pop());
-		update();
+		checkLoss();
 	}
 
-	public int verdoppeln(ArrayList<Karte> hand, int einsatz) {
+	public void verdoppeln(ArrayList<Karte> hand) {
+		playerturn = false;
 		hand.add(stapel.pop());
-		return einsatz * 2;
+		player.setGeld(-einsatz); // Spieler setzt nochmal den gleichen Einsatz
+		this.einsatz *= 2; // theoretischen Gewinn verdoppeln
+		endRound();
+
 	}
 
-	public void setEinsatz(int wert) {
+	public boolean setEinsatz(int wert) {
+		if (wert > player.getGeld())
+			return false;
 		einsatz = wert;
+		player.setGeld(-wert); // Wert wird vom aktuellen Geld des Spielers abgezogen
+		return true;
+	}
+
+	public int getEinsatz() {
+		return this.einsatz;
 	}
 
 	public void stand() {
-		dealer();
+		playerturn = false;
+		dealerHand.getFirst().setSichtbar(true);
+		endRound();
+
 	}
 
 	public void dealer() {
-		if (dealerWert >= 17)
+		if (getWert(dealerHand) >= 17)
 			return;
 		hit(dealerHand);
-		update();
+		// update();
 		dealer();
 	}
 
-	public int getWert(ArrayList<Karte> hand) {
+	public int getHiddenWert(ArrayList<Karte> hand) {
 		int res = 0;
 		int count = 0;
 		for (var i : hand) {
-			if (i.getFoto() == bild.Ass)
+			if (i.getFoto() == Karte.bild.Ass)
 				count++;
 			res += i.getWert();
 		}
@@ -131,22 +131,71 @@ public class Blackjack {
 		return res;
 	}
 
-	public void update() {
-		playerWert = getWert(playerHand);
-		dealerWert = getWert(dealerHand);
-		if (playerWert == 21)
-			return; // methode !
-		if (dealerWert == 21)
-			return;
-
-		if (playerWert > 21)
-			return;
-		if (dealerWert > 21)
-			return;
+	public int getWert(ArrayList<Karte> hand) {
+		int res = 0;
+		int count = 0;
+		for (var i : hand) {
+			if (!i.getSichtbar())
+				continue;
+			if (i.getFoto() == Karte.bild.Ass)
+				count++;
+			res += i.getWert();
+		}
+		while (count > 0 && res > 21) {
+			count--;
+			res -= 10;
+		}
+		return res;
 	}
-	public void resumeee(ArrayList<Karte> hand) {
-		
-		
+
+	private void checkLoss() {
+		if (getWert(playerHand) > 21) {
+			winstate = WinStates.Lost;
+			playerturn = false;
+			dealerHand.getFirst().setSichtbar(true);
+			;
+		}
 	}
 
+	public WinStates checkWin() {
+		var d = getHiddenWert(dealerHand);
+		var p = getHiddenWert(playerHand);
+
+		if (p > 21)
+			return WinStates.Lost;
+		if (d > 21)
+			return WinStates.Won;
+
+		if (p > d)
+			return WinStates.Won;
+		else if (p < d)
+			return WinStates.Lost;
+		else
+			return WinStates.Equal;
+	}
+
+	public void endRound() {
+		dealer();
+		winstate = checkWin();
+		if (winstate == WinStates.Equal) {
+			player.setGeld(einsatz); // Spieler bekommt Einsatz zurück
+		}
+		if (winstate == WinStates.Won) {
+			player.setGeld(einsatz * 2); // Spieler erhält das Doppelte
+		}
+
+	}
+
+	public void newRound() {
+		einsatz = 0;
+		for (Karte i : playerHand) { // Reset des ursprünglichen Kartendecks
+			stapel.push(i);
+		}
+		for (Karte i : dealerHand) {
+			stapel.push(i);
+		}
+		Collections.shuffle(stapel); // neues Deck ist bereit
+		winstate = WinStates.Playing;
+		playerturn = true;
+	}
 }

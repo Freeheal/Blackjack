@@ -10,4 +10,12 @@ public class Player {
 		geld = 1000;
 	}
 
+	public void setGeld(int einsatz) {
+		geld += einsatz;
+	}
+
+	public int getGeld() {
+	return geld;
+	}
+
 }
